@@ -1,0 +1,21 @@
+﻿@page "/login"
+@using TransactionTracker.Services
+@inject UserService UserService
+@inject NavigationManager Navigation
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText @bind-Value="loginModel.UserName" placeholder="Username" class="form-control" />
+    <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password" class="form-control" />
+
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+@if (loginError)
+{
+        <div class="alert alert-danger">Invalid login credentials!</div>
+}
+
+

@@ -1,0 +1,59 @@
+﻿@page "/transactions"
+@using TransactionTracker.Model
+@using TransactionTracker.Services
+@inject TransactionService TransactionService
+@inject NavigationManager Navigation
+
+<h3>Transactions</h3>
+
+<EditForm Model="transactionModel" OnValidSubmit="HandleTransactionSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText @bind-Value="transactionModel.Title" placeholder="Title" class="form-control" />
+    <InputNumber @bind-Value="transactionModel.Amount" placeholder="Amount" class="form-control" />
+
+    <InputSelect @bind-Value="transactionModel.Type" class="form-control">
+        <option value="1">Credit</option>
+        <option value="2">Debit</option>
+        <option value="3">Debt</option>
+    </InputSelect>
+
+    <InputText @bind-Value="transactionModel.Tags" placeholder="Tags (comma separated)" class="form-control" />
+    <InputTextArea @bind-Value="transactionModel.Notes" placeholder="Notes" class="form-control" />
+
+    <!-- Submit button inside the EditForm -->
+    <button type="submit" class="btn btn-primary">Add Transaction</button>
+</EditForm>
+
+<h4>Transaction List</h4>
+
+@foreach (var transaction in transactions)
+{
+    <div class="transaction">
+        <p>@transaction.Title - @transaction.Amount @transaction.Currency</p>
+        <p>@transaction.Date.ToShortDateString()</p>
+        <p>@transaction.Tags</p>
+    </div>
+}
+
+@code {
+    // Declare transactionModel and transactions here
+    private Transaction transactionModel = new Transaction();
+    private List<Transaction> transactions = new List<Transaction>();
+
+    // This is where the component initializes and loads existing transactions
+    protected override async Task OnInitializedAsync()
+    {
+        transactions = await TransactionService.LoadTransactions();
+    }
+
+    // Handle the form submission
+    private async Task HandleTransactionSubmit()
+    {
+        // Add the transaction and reload the transaction list
+        await TransactionService.AddTransaction(transactionModel);
+        transactions = await TransactionService.LoadTransactions();
+        transactionModel = new Transaction(); // Reset the form
+    }
+}

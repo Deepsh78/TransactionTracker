@@ -1,0 +1,23 @@
+﻿@page "/dashboard"
+@using TransactionTracker.Model
+@using TransactionTracker.Services
+@inject TransactionService TransactionService
+@inject NavigationManager Navigation
+
+<h3>Dashboard</h3>
+
+<div>
+    <p>Total Cash Inflows: @totalInflows</p>
+    <p>Total Cash Outflows: @totalOutflows</p>
+    <p>Total Debts: @totalDebts</p>
+    <p>Remaining Debts: @remainingDebts</p>
+    <p>Cleared Debts: @clearedDebts</p>
+</div>
+
+<h4>Top 5 Highest Transactions</h4>
+@foreach (var transaction in topTransactions)
+{
+        <div>@transaction.Title - @transaction.Amount @transaction.Currency</div>
+}
+
+
